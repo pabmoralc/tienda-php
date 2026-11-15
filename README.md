@@ -11,7 +11,7 @@ Aplicación web modular en **PHP puro** (sin frameworks) para gestionar el catá
 
 Arquitectura por capas: **modelos** (datos), **servicios** (lógica y acceso a BD), **configuración** (Singleton) y **vistas** (presentación).
 
-> Estado actual: **Fases 1 a 4 completadas** (estructura, conexión con la BD, CRUD de productos con validaciones, login y permisos). Ver [Registro de desarrollo](#registro-de-desarrollo).
+> Estado actual: **proyecto completo (fases 1 a 5)**: CRUD de productos con validaciones, login y permisos, y subida de imágenes. Ver [Registro de desarrollo](#registro-de-desarrollo).
 
 ## Tecnologías utilizadas
 
@@ -50,7 +50,9 @@ tienda-php/
 │   ├── create.php          # Alta de producto
 │   ├── update.php          # Edición de producto
 │   ├── details.php         # Ficha de producto
-│   └── delete.php          # Eliminación con confirmación
+│   ├── delete.php          # Eliminación con confirmación
+│   ├── update-image.php    # Formulario para cambiar la imagen
+│   └── update_image_file.php # Valida y guarda la imagen subida
 ├── tests/                  # Pruebas PHPUnit
 ├── .env                    # Variables de entorno (BD, puertos)
 ├── composer.json
@@ -136,6 +138,15 @@ docker exec -it php_app vendor/bin/phpunit
 - `logout.php`: borra los datos de la sesión y vuelve al listado con un mensaje.
 - Permisos: crear, editar y eliminar solo para el rol ADMIN (comprobado en el servidor, no solo ocultando botones). Invitados y usuarios normales pueden ver el listado y los detalles.
 - `index.php` muestra las visitas y el último login del usuario conectado; la cabecera muestra su nombre, una etiqueta ADMIN y el botón Login/Logout.
+
+### Fase 5 – Imágenes y revisión final (13/11 – 16/11)
+
+- `update-image.php`: formulario (`multipart/form-data`) con los datos del producto y su imagen actual. Solo admin.
+- `update_image_file.php`: valida que el producto existe, que la subida ha ido bien, el tamaño (máx. 2 MB) y que el archivo es JPG o PNG **por MIME real** (`finfo`, leyendo el contenido) **y por extensión**. Guarda la imagen en `src/uploads/` con el nombre `<uuid>.<ext>` mediante `move_uploaded_file()` y actualiza la URL en la BD.
+- Al cambiar de formato (PNG → JPG) se borra el archivo anterior; al eliminar un producto también se borra su imagen.
+- La URL guardada lleva `?v=<marca de tiempo>` para que el navegador no muestre la imagen antigua desde su caché.
+- Botón «Imagen» en el listado (solo admin).
+- Revisión final: rutas y `require_once` de todas las vistas, pruebas manuales de todos los roles y actualización del README.
 
 ## Autor
 

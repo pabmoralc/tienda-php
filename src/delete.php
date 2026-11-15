@@ -33,7 +33,8 @@ if (!$producto) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 1. Si la imagen es una subida por nosotros (está en /uploads), se borra el archivo
     if (str_starts_with($producto->imagen, $config->uploadUrl)) {
-        $archivo = $config->uploadPath . basename($producto->imagen);
+        // parse_url quita el "?v=..." de la URL; basename se queda solo con el nombre del archivo
+        $archivo = $config->uploadPath . basename(parse_url($producto->imagen, PHP_URL_PATH));
         if (is_file($archivo)) {
             unlink($archivo);
         }

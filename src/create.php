@@ -157,7 +157,7 @@ require_once __DIR__ . '/header.php';
     </div>
 
     <div class="col-12">
-        <p class="text-muted small mb-0">Se asignará una imagen por defecto; podrás cambiarla después.</p>
+        <p class="text-muted small mb-0">Se asignará una imagen por defecto; podrás cambiarla después con el botón «Imagen» del listado.</p>
     </div>
 
     <div class="col-12 d-flex gap-2">

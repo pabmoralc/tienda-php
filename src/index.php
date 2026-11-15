@@ -76,6 +76,7 @@ require_once __DIR__ . '/header.php';
                         <a class="btn btn-sm btn-primary" href="details.php?id=<?= $producto->id ?>">Detalles</a>
                         <?php if ($session->isAdmin()): ?>
                             <a class="btn btn-sm btn-warning" href="update.php?id=<?= $producto->id ?>">Editar</a>
+                            <a class="btn btn-sm btn-info" href="update-image.php?id=<?= $producto->id ?>">Imagen</a>
                             <a class="btn btn-sm btn-danger" href="delete.php?id=<?= $producto->id ?>">Eliminar</a>
                         <?php endif; ?>
                     </td>
