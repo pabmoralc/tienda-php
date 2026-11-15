@@ -37,7 +37,9 @@ require_once __DIR__ . '/header.php';
             <a class="btn btn-outline-secondary" href="index.php">Limpiar</a>
         <?php endif; ?>
     </form>
-    <a class="btn btn-success" href="create.php">+ Nuevo producto</a>
+    <?php if ($session->isAdmin()): ?>
+        <a class="btn btn-success" href="create.php">+ Nuevo producto</a>
+    <?php endif; ?>
 </div>
 
 <?php if (empty($productos)): ?>
@@ -72,14 +74,23 @@ require_once __DIR__ . '/header.php';
                     <td class="text-end"><?= $producto->stock ?></td>
                     <td class="text-nowrap">
                         <a class="btn btn-sm btn-primary" href="details.php?id=<?= $producto->id ?>">Detalles</a>
-                        <a class="btn btn-sm btn-warning" href="update.php?id=<?= $producto->id ?>">Editar</a>
-                        <a class="btn btn-sm btn-danger" href="delete.php?id=<?= $producto->id ?>">Eliminar</a>
+                        <?php if ($session->isAdmin()): ?>
+                            <a class="btn btn-sm btn-warning" href="update.php?id=<?= $producto->id ?>">Editar</a>
+                            <a class="btn btn-sm btn-danger" href="delete.php?id=<?= $producto->id ?>">Eliminar</a>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
         </table>
     </div>
+<?php endif; ?>
+
+<?php if ($session->isLoggedIn()): ?>
+    <p class="text-muted small mt-3">
+        Visitas en esta sesión: <strong><?= $session->getVisits() ?></strong> ·
+        Último login: <strong><?= htmlspecialchars($session->getLastLogin()) ?></strong>
+    </p>
 <?php endif; ?>
 
 <?php require_once __DIR__ . '/footer.php'; ?>

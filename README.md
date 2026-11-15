@@ -11,7 +11,7 @@ Aplicación web modular en **PHP puro** (sin frameworks) para gestionar el catá
 
 Arquitectura por capas: **modelos** (datos), **servicios** (lógica y acceso a BD), **configuración** (Singleton) y **vistas** (presentación).
 
-> Estado actual: **Fases 1, 2 y 3 completadas** (estructura, conexión con la BD y CRUD de productos con validaciones). Ver [Registro de desarrollo](#registro-de-desarrollo).
+> Estado actual: **Fases 1 a 4 completadas** (estructura, conexión con la BD, CRUD de productos con validaciones, login y permisos). Ver [Registro de desarrollo](#registro-de-desarrollo).
 
 ## Tecnologías utilizadas
 
@@ -45,6 +45,8 @@ tienda-php/
 │   ├── header.php          # Cabecera y menú comunes
 │   ├── footer.php          # Pie común
 │   ├── index.php           # Listado y buscador de productos
+│   ├── login.php           # Inicio de sesión
+│   ├── logout.php          # Cierre de sesión
 │   ├── create.php          # Alta de producto
 │   ├── update.php          # Edición de producto
 │   ├── details.php         # Ficha de producto
@@ -127,10 +129,18 @@ docker exec -it php_app vendor/bin/phpunit
 - Seguridad: consultas preparadas, `htmlspecialchars()` en toda la salida (XSS) y validación del `id` con `filter_input()`.
 - Pruebas PHPUnit del CRUD en `tests/ProductosServiceTest.php`.
 
+### Fase 4 – Login y control de sesiones (11/11 – 12/11)
+
+- `SessionService` completo: `login()` (con `session_regenerate_id` contra la fijación de sesión), `logout()`, caducidad tras 1 hora de inactividad, contador de visitas, fecha del último login y `requireAdmin()`.
+- `login.php`: formulario, validación de campos vacíos y autenticación con `UsersService::authenticate()` (`password_verify`).
+- `logout.php`: borra los datos de la sesión y vuelve al listado con un mensaje.
+- Permisos: crear, editar y eliminar solo para el rol ADMIN (comprobado en el servidor, no solo ocultando botones). Invitados y usuarios normales pueden ver el listado y los detalles.
+- `index.php` muestra las visitas y el último login del usuario conectado; la cabecera muestra su nombre, una etiqueta ADMIN y el botón Login/Logout.
+
 ## Autor
 
 - **Pablo** – 2º DAW (semipresencial), IES Juan de Garay
-- GitHub: <https://github.com/pabmoralc
+- GitHub: <https://github.com/pabmoralc>
 
 ## Licencia
 

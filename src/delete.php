@@ -16,7 +16,7 @@ use services\ProductosService;
 use services\SessionService;
 
 $session = SessionService::getInstance();
-// Fase 4: aquí se comprobará que el usuario es administrador.
+$session->requireAdmin();   // Solo el administrador puede continuar
 
 $config = Config::getInstance();
 $productosService = new ProductosService($config->db);

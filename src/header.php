@@ -3,6 +3,8 @@
  * header.php - Cabecera común de todas las páginas.
  * Abre el HTML, pinta la barra de navegación y muestra el mensaje flash pendiente.
  * Antes de incluirlo, cada página puede definir $titulo.
+ * Ojo: un archivo incluido comparte las variables de la página, por eso aquí
+ * se usan nombres propios ($nombreSesion, $mensajeFlash) que no choquen con ellas.
  */
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -11,8 +13,8 @@ require_once __DIR__ . '/services/SessionService.php';
 use services\SessionService;
 
 $session = SessionService::getInstance();
-$username = $session->getUsername();
-$mensaje = $session->getMensaje();
+$nombreSesion = $session->getUsername();
+$mensajeFlash = $session->getMensaje();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -37,7 +39,9 @@ $mensaje = $session->getMensaje();
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Productos</a></li>
-                <li class="nav-item"><a class="nav-link" href="create.php">Nuevo producto</a></li>
+                <?php if ($session->isAdmin()): ?>
+                    <li class="nav-item"><a class="nav-link" href="create.php">Nuevo producto</a></li>
+                <?php endif; ?>
                 <li class="nav-item">
                     <?php if ($session->isLoggedIn()): ?>
                         <a class="nav-link" href="logout.php">Logout</a>
@@ -46,15 +50,20 @@ $mensaje = $session->getMensaje();
                     <?php endif; ?>
                 </li>
             </ul>
-            <span class="navbar-text">👤 <?= htmlspecialchars($username) ?></span>
+            <span class="navbar-text">
+                👤 <?= htmlspecialchars($nombreSesion) ?>
+                <?php if ($session->isAdmin()): ?>
+                    <span class="badge bg-warning text-dark ms-1">ADMIN</span>
+                <?php endif; ?>
+            </span>
         </div>
     </div>
 </nav>
 
 <main class="container flex-grow-1">
-    <?php if ($mensaje): ?>
-        <div class="alert alert-<?= htmlspecialchars($mensaje['tipo']) ?> alert-dismissible fade show">
-            <?= htmlspecialchars($mensaje['texto']) ?>
+    <?php if ($mensajeFlash): ?>
+        <div class="alert alert-<?= htmlspecialchars($mensajeFlash['tipo']) ?> alert-dismissible fade show">
+            <?= htmlspecialchars($mensajeFlash['texto']) ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
         </div>
     <?php endif; ?>
